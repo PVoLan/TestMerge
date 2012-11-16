@@ -40,14 +40,14 @@ MASTER_BRANCH_NAME="$2"
 
 echo "Checking branches"
 
-STATUS=git checkout -q $FEATURE_BRANCH_NAME
+STATUS=`git checkout -q $FEATURE_BRANCH_NAME`
 if [ ! -z "$STATUS" ]; then
 	echo "Cannot checkout branch $FEATURE_BRANCH_NAME. Possibly, it doesn't exist"
 	echo "Aborted"
 	exit
 fi
 
-STATUS=git checkout -q $MASTER_BRANCH_NAME
+STATUS=`git checkout -q $MASTER_BRANCH_NAME`
 if [ ! -z "$STATUS" ]; then
 	echo "Cannot checkout branch $MASTER_BRANCH_NAME. Possibly, it doesn't exist"
 	echo "Aborted"
