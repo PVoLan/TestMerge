@@ -1,5 +1,7 @@
 USAGE="Usage: merge_careful <feature_branch_name> <master_branch_name>"
 
+#Validate parameters
+
 if [ -z "$1" ]; then
 	echo "Need feature branch"
 	echo "$USAGE"
@@ -18,6 +20,10 @@ if [ ! -z "$3" ]; then
 	exit
 fi
 
+#Validate current changes
+
+echo "Checking current changes"
+
 STATUS=`git status --porcelain`
 if [ ! -z "$STATUS" ]; then
 	echo "Current branch is not clean. Commit your current changes"
@@ -25,11 +31,34 @@ if [ ! -z "$STATUS" ]; then
 	exit
 fi
 
+echo "Ok"
+
 FEATURE_BRANCH_NAME="$1"
 MASTER_BRANCH_NAME="$2"
 
-echo "Pulling $FEATURE_BRANCH_NAME..."
-git checkout $FEATURE_BRANCH_NAME
+#Validate branch existance
+
+echo "Checking branches"
+
+STATUS=git checkout -q $FEATURE_BRANCH_NAME
+if [ ! -z "$STATUS" ]; then
+	echo "Cannot checkout branch $FEATURE_BRANCH_NAME. Possibly, it doesn't exist"
+	echo "Aborted"
+	exit
+fi
+
+STATUS=git checkout -q $MASTER_BRANCH_NAME
+if [ ! -z "$STATUS" ]; then
+	echo "Cannot checkout branch $MASTER_BRANCH_NAME. Possibly, it doesn't exist"
+	echo "Aborted"
+	exit
+fi
+
+echo "Ok"
+
+
+echo "Pulling master from remote server"
+
 git pull
 
 STATUS=`git status --porcelain`
@@ -38,6 +67,8 @@ if [ ! -z "$STATUS" ]; then
 	echo "Aborted"
 	exit
 fi
+
+echo "Ok"
 
 echo "**********************************"
 echo "Master branch is"
